@@ -46,22 +46,26 @@ func _input(event):
 	if !alive: return
 	
 	# space bar toggles a flag on the currently hovered block
-	if Input.is_action_just_pressed("toggle_flag") && covered && get_rect().has_point(get_global_mouse_position() - position):
-		flag = !flag
-		if flag:
-			var flag_sprite = Sprite2D.new()
-			flag_sprite.name = "Flag"
-			flag_sprite.texture = load("res://Flag.png")
-			flag_sprite.scale = Vector2(0.7, 0.7)
-			add_child(flag_sprite)
-			get_parent().bombs_found += 1
-			get_parent().update_bombs_msg()
-		else:
-			var flag_sprite = $Flag
-			remove_child(flag_sprite)
-			flag_sprite.queue_free()
-			get_parent().bombs_found -= 1
-			get_parent().update_bombs_msg()
+	if Input.is_action_just_pressed("toggle_flag") && get_rect().has_point(get_global_mouse_position() - position):
+		if covered:
+			flag = !flag
+			if flag:
+				var flag_sprite = Sprite2D.new()
+				flag_sprite.name = "Flag"
+				flag_sprite.texture = load("res://Flag.png")
+				flag_sprite.scale = Vector2(0.7, 0.7)
+				add_child(flag_sprite)
+				get_parent().bombs_found += 1
+				get_parent().update_bombs_msg()
+			else:
+				var flag_sprite = $Flag
+				remove_child(flag_sprite)
+				flag_sprite.queue_free()
+				get_parent().bombs_found -= 1
+				get_parent().update_bombs_msg()
+		elif bomb_count() && bomb_count() == flag_count():
+			opened.emit(board_pos)
+			
 	
 	if !flag && Input.is_action_just_pressed("click") && covered && get_rect().has_point(event.position - position):
 		clicking = true
@@ -87,7 +91,7 @@ func _input(event):
 				get_node("Explosion").emitting = true
 				get_parent().game_end()
 			
-			if !bomb && !bomb_count():
+			if !bomb_count():
 				opened.emit(board_pos)
 		else:
 			$AnimationPlayer.play_backwards("grow")
@@ -110,6 +114,12 @@ func bomb_count() -> int:
 	.filter(func(block): return block.bomb))
 
 
+func flag_count() -> int:
+	return len(get_adjs()\
+	.map(func(pos): return get_parent().board[pos.y][pos.x])\
+	.filter(func(block): return block.flag))
+
+
 ## connect signals properly to adjacent blocks for recursive opening
 func connect_to_adjs():
 	for adj in get_adjs():
@@ -126,7 +136,13 @@ func on_opened(pos):
 		await get_tree().create_timer(0.08).timeout
 		frame = 1
 		scale = Vector2.ONE
-		if !bomb && !bomb_count():
+		
+		if bomb:
+			print("Game over")
+			alive = false
+			get_node("Explosion").emitting = true
+			get_parent().game_end()
+		elif !bomb_count():
 			opened.emit(board_pos)
 
 
