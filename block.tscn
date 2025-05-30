@@ -1,7 +1,13 @@
-[gd_scene load_steps=7 format=3 uid="uid://bmt2ot1vxqb8i"]
+[gd_scene load_steps=9 format=3 uid="uid://bmt2ot1vxqb8i"]
 
+[ext_resource type="Shader" uid="uid://dvjjccvsucdjy" path="res://block.gdshader" id="1_5d32t"]
 [ext_resource type="Texture2D" uid="uid://c8yevkmir5agk" path="res://Minesweeper Block.png" id="1_im0tn"]
 [ext_resource type="Script" uid="uid://q6sdn1km6lfe" path="res://block.gd" id="2_xfwl5"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mk58r"]
+shader = ExtResource("1_5d32t")
+shader_parameter/bg_color = Color(0.588235, 0.678431, 0.666667, 1)
+shader_parameter/border_color = Color(0, 0.926416, 0.719304, 1)
 
 [sub_resource type="Animation" id="Animation_xfwl5"]
 resource_name = "grow"
@@ -33,17 +39,20 @@ _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.740113, 0), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [node name="Block" type="Sprite2D"]
+material = SubResource("ShaderMaterial_mk58r")
 texture = ExtResource("1_im0tn")
 vframes = 2
 script = ExtResource("2_xfwl5")
+number_color = Color(0.784314, 0, 0.34902, 1)
+number_outline = Color(0, 0, 0, 1)
 
 [node name="Label" type="Label" parent="."]
 offset_left = -7.0
 offset_top = -17.0
 offset_right = 7.0
 offset_bottom = 17.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0.843363, 0.682578, 0.896605, 1)
+theme_override_colors/font_color = Color(0.784314, 0, 0.34902, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 24
 text = "8"

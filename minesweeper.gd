@@ -19,11 +19,15 @@ func _ready():
 			var new_block = block_data.instantiate()
 			new_block.board_pos = Vector2i(j, i)
 			new_block.get_node("Label").text = ""
+			new_block.get_node("Label").add_theme_color_override("font_color", Data.number_color)
+			new_block.get_node("Label").add_theme_color_override("font_outline_color", Data.number_outline)
 			row.append(new_block)
 			add_child(new_block)
 			new_block.position = start + (new_block.board_pos * 32)
 		board.append(row) # 2d list can now refer to all block by pos
 	
+	board[0][0].material.set_shader_parameter("bg_color", Data.bg_color)
+	board[0][0].material.set_shader_parameter("border_color", Data.border_color)
 	# wait for the first click before setting up
 	var open_block = await first_click
 	print("Clicked")
@@ -33,6 +37,7 @@ func _ready():
 			if randi_range(0, 3) == 3:
 				block.bomb = true
 				var expl = load("res://explosion.tscn").instantiate()
+				expl.color_ramp = Data.explosion_color
 				expl.name = "Explosion"
 				block.add_child(expl)
 				bombs += 1

@@ -1,3 +1,4 @@
+@tool
 extends Sprite2D
 
 # blocks detect when they are clicked on by the user
@@ -12,6 +13,24 @@ extends Sprite2D
 var covered: bool = true
 var bomb = false
 var flag = false
+
+@export var number_color := Color(1, 1, 1, 1):
+	set(value):
+		number_color = value
+		if $Label:
+			$Label.add_theme_color_override("font_color", number_color)
+
+@export var number_outline := Color(1, 1, 1, 1):
+	set(value):
+		number_outline = value
+		if $Label:
+			$Label.add_theme_color_override("font_outline_color", number_outline)
+
+func _process(_delta):
+	if Engine.is_editor_hint():
+		if $Label:
+			$Label.add_theme_color_override("font_color", number_color)
+			$Label.add_theme_color_override("font_outline_color", number_outline)
 
 static var alive = true
 
