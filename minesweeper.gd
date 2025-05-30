@@ -83,7 +83,7 @@ func game_end():
 	flattened_board.shuffle()
 	
 	for block in flattened_board:
-		if block.flag: block.remove_child(get_node("Flag")); block.flag = false
+		if block.flag: block.remove_child(block.get_node("Flag")); block.flag = false
 		
 		if block.covered:
 			block.get_node("AnimationPlayer").play("grow")

@@ -17,13 +17,13 @@ var flag = false
 @export var number_color := Color(1, 1, 1, 1):
 	set(value):
 		number_color = value
-		if $Label:
+		if get_node_or_null("Label"):
 			$Label.add_theme_color_override("font_color", number_color)
 
 @export var number_outline := Color(1, 1, 1, 1):
 	set(value):
 		number_outline = value
-		if $Label:
+		if get_node_or_null("Label"):
 			$Label.add_theme_color_override("font_outline_color", number_outline)
 
 func _process(_delta):
@@ -152,6 +152,6 @@ func reveal():
 		$Label.visible = true
 
 
-func _on_animation_player_animation_finished(anim_name):
+func _on_animation_player_animation_finished(_anim_name):
 	if !Input.is_action_pressed("click"):
 		scale = Vector2.ONE
