@@ -83,7 +83,6 @@ func _input(event):
 			$CPUParticles2D.emitting = true
 			await get_tree().create_timer(0.08).timeout
 			frame = 1
-			scale = Vector2(1, 1)
 			
 			if bomb:
 				print("Game over")
@@ -135,7 +134,6 @@ func on_opened(pos):
 		$CPUParticles2D.emitting = true
 		await get_tree().create_timer(0.08).timeout
 		frame = 1
-		scale = Vector2.ONE
 		
 		if bomb:
 			print("Game over")
@@ -147,8 +145,13 @@ func on_opened(pos):
 
 
 func reveal():
-	var bomb_child = get_node("Bomb")
+	var bomb_child = get_node_or_null("Bomb")
 	if bomb_child:
 		bomb_child.visible = true
 	else:
 		$Label.visible = true
+
+
+func _on_animation_player_animation_finished(anim_name):
+	if !Input.is_action_pressed("click"):
+		scale = Vector2.ONE

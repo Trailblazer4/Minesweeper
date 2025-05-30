@@ -92,7 +92,7 @@ func game_end():
 			await get_tree().create_timer(0.001).timeout
 			block.get_node("CPUParticles2D").emitting = true
 			block.frame = 1
-			block.scale = Vector2.ONE
+			#block.scale = Vector2.ONE
 		
 		if block.bomb:
 			block.get_node("Explosion").emitting = true
